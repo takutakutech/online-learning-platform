@@ -1,14 +1,15 @@
 'use client';
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Session } from '@supabase/supabase-js';
 import { supabase } from "../lib/supabaseClient";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session));
-    const { data: listener } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
     return () => {
